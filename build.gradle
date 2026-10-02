@@ -1,0 +1,46 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '7.0.190'
+}
+
+group = 'com.lynn.curiossyncfix'
+version = '1.0.1'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    mavenCentral()
+    // Curios (version-exact) via the Modrinth maven.
+    maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content { includeGroup 'maven.modrinth' }
+    }
+    // Fallback: Illusive Soulworks maven also publishes Curios.
+    maven {
+        name = 'IllusiveSoulworks'
+        url = 'https://maven.illusivesoulworks.com/releases'
+    }
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+
+    // Compile against the exact Curios your pack ships. Modrinth maven is the simplest source.
+    // If NeoGradle can't transform this at runtime, swap to a local file dependency (see README).
+    compileOnly "maven.modrinth:curios:${curios_version}"
+    runtimeOnly "maven.modrinth:curios:${curios_version}"
+}
+
+// Tell NeoGradle this jar contains mixins so the refmap is generated and wired up.
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+            'MixinConfigs': 'curiossyncfix.mixins.json'
+        ])
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}

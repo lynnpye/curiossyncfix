@@ -1,0 +1,35 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "curiossyncfix"
+version = "1.0.1"
+displayName = "Curios Sync Fix"
+authors = "Lynn"
+description = '''
+Prevents a malformed curios:sync_stack packet from disconnecting the client. When a curio's synced
+data component fails to decode, the bad packet is logged and dropped instead of tearing down the
+connection; the affected slot re-syncs on the next update. Aimed at the Reliquified: Iron's Spells
+'n Spellbooks sealed weapons desync, but is item-agnostic.
+'''
+
+# Load after Curios so its classes exist when our mixins are applied. BOTH sides: the copy fix
+# applies where the packet is built (server), the resilience guard applies on the client.
+[[dependencies.curiossyncfix]]
+modId = "curios"
+type = "required"
+versionRange = "[9.0,)"
+ordering = "AFTER"
+side = "BOTH"
+
+# NeoForge itself.
+[[dependencies.curiossyncfix]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "curiossyncfix.mixins.json"

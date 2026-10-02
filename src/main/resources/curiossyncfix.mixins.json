@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "com.lynn.curiossyncfix.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "curiossyncfix.refmap.json",
+  "mixins": [
+    "SPacketSyncStackCopyMixin"
+  ],
+  "client": [
+    "SPacketSyncStackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
